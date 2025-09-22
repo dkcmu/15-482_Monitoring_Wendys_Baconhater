@@ -36,6 +36,9 @@ class LightMonitor(Monitor):
 
     def perceive(self):
         # BEGIN STUDENT CODE
+        self.mtime = self.sensordata['midnight_time']
+        self.light = self.sensordata['light']
+        self.utime = self.sensordata['unix_time']
         # END STUDENT CODE
         pass
 
@@ -52,6 +55,33 @@ class LightMonitor(Monitor):
             #  for the LightBehavior based on this calculation
 
             # BEGIN STUDENT CODE
+            curr_t = self.mtime
+            future_t = (3600.0 * 24)
+
+            # print(f"Time Passed: {self.dt}")
+            print(f"Current Time: {clock_time(curr_t)}")
+            
+            # Additional insolation
+            insolation_dt = (self.dt * self.light) / 3600.0
+            self.insolation += insolation_dt
+
+            # print(f"Perceived Light: {self.light}")
+            # print(f"Insolation Change: {insolation_dt}")
+
+            # LightBehavior time remaining and Expected future ambient insolation
+            future_behavior_time = self.lighting_time_left(curr_t) / 3600.0
+            future_ambient_insolation = self.non_lighting_ambient_insolation(curr_t, future_t)
+
+            # print(f"Behavior Time Left: {future_behavior_time}")
+            # print(f"Future Ambient Insolation: {future_ambient_insolation}")
+
+            if future_behavior_time:
+                self.optimal_value = (self.target - self.insolation - future_ambient_insolation) / future_behavior_time
+            else:
+                self.optimal_value = 0
+            
+            # print(f"Insolation: ({self.insolation} / {self.target})")
+            # print(f"Optimal Value: {self.optimal_value}\n")
             # END STUDENT CODE
             pass
 

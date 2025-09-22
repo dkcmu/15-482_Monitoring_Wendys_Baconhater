@@ -31,6 +31,8 @@ class Light(Greenhouse_Behavior):
         # Add all your FSM state names to self.states
         # BEGIN STUDENT CODE
         self.states += ['init', 'change_light', 'keep_light', 'dark']
+
+        self.agent = agent
         # END STUDENT CODE
 
         self.fsm = Machine(self, states=self.states, initial=self.initial,
@@ -87,6 +89,7 @@ class Light(Greenhouse_Behavior):
         self.mtime = self.sensordata["midnight_time"]
         self.time = self.sensordata["unix_time"]
         self.light = self.sensordata["light"]
+        self.adjust_optimal_level()
     
     def act(self):
         # Use 'doStep' trigger for all other transitions
@@ -112,6 +115,18 @@ class Light(Greenhouse_Behavior):
 
     def turn_off_led(self):
         self.setLED(0)
+    
+    def adjust_optimal_level(self):
+        monitor = self.agent.getExecutiveLayer().getMonitor('LightMonitor')
+        
+        # Avoid over-insolation
+        new_optimal_level = [(monitor.optimal_value // 1) - 45, (monitor.optimal_value // 1) + 5]
+        if self.optimal_level != new_optimal_level:
+            self.optimal_level = new_optimal_level
+
+            # print(f"Adjusted Optimal Light Level: {self.optimal_level}")
+        # Future consideration: RaiseTemp behavior
+
     # END STUDENT CODE
 
     def setLED(self, level):
