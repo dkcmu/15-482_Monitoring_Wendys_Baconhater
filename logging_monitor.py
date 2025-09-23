@@ -1,4 +1,5 @@
 from monitor import *
+from terrabot_utils import clock_time
 
 class LoggingMonitor(Monitor):
 
@@ -6,13 +7,13 @@ class LoggingMonitor(Monitor):
         super(LoggingMonitor, self).__init__("LoggingMonitor", period)
         # Put any iniitialization code here
         # BEGIN STUDENT CODE
-        self.normal_sensors = [
-            'unix_time', 'light', 'temp', 'humid', 'weight',
+        self.normal_sensors = ['unix_time',
+            'light', 'temp', 'humid', 'weight',
             'smoist', 'level', 'level_raw']
         self.array_sensors = ['light_raw', 'temp_raw', 'humid_raw', 'weight_raw' ,'smoist_raw']
         self.actuators = ['fan', 'wpump', 'led', 'camera']
-        self.file_name = "monitoring_hw_log.csv"
 
+        self.file_name = "monitoring_hw_log.csv"
         headings = self.normal_sensors + [
             'light_raw_1', 'light_raw_2',
             'temp_raw_1', 'temp_raw_2',
@@ -28,6 +29,8 @@ class LoggingMonitor(Monitor):
 
     def perceive(self):
         # BEGIN STUDENT CODE
+        self.normal_sensor_data = {sensor:self.sensordata[sensor] for sensor in self.normal_sensors}
+        self.array_sensor_data = {sensor:self.sensordata[sensor] for sensor in self.array_sensors}
         # END STUDENT CODE
         pass
 
@@ -36,9 +39,10 @@ class LoggingMonitor(Monitor):
         #  actuator data, preferably as a comma-separated line of values.
         #  Make sure to timestamp the line of data
         # BEGIN STUDENT CODE
-        sensor_log_data = [str(self.sensordata[sensor]) for sensor in self.normal_sensors]
-        for sensor in self.array_sensors:
-            data = self.sensordata[sensor]
+        print(f"Current Time: {clock_time(self.normal_sensor_data['unix_time'])}")
+
+        sensor_log_data = [str(value) for value in self.normal_sensor_data.values()]
+        for data in self.array_sensor_data.values():
             sensor_log_data.append(str(data[0]))
             sensor_log_data.append(str(data[1]))
 
