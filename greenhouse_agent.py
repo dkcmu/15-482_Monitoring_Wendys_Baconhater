@@ -7,6 +7,7 @@ import greenhouse_behaviors as gb
 import camera_behavior as cb
 import email_behavior
 import light_monitor
+import logging_monitor
 
 def check_for_input():
     if sys.stdin in select.select([sys.stdin],[],[],0)[0]:
@@ -106,7 +107,10 @@ class LayeredGreenhouseAgent(GreenhouseAgent):
         self.setPlanningLayer(planning)
         self.getPlanningLayer().getNewSchedule()
 
-        self.getExecutiveLayer().setMonitors(self.sensors, self.actuators.actuator_state, [light_monitor.LightMonitor()])
+        self.getExecutiveLayer().setMonitors(
+            self.sensors,
+            self.actuators.actuator_state,
+            [light_monitor.LightMonitor(), logging_monitor.LoggingMonitor()])
         # END STUDENT CODE
 
     def setBehavioralLayer(self, behavioral):
