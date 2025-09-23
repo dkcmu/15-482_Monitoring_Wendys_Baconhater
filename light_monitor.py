@@ -59,7 +59,7 @@ class LightMonitor(Monitor):
             future_t = (3600.0 * 24)
 
             # print(f"Time Passed: {self.dt}")
-            print(f"Current Time: {clock_time(curr_t)}")
+            # print(f"Current Time: {clock_time(curr_t)}")
             
             # Additional insolation
             insolation_dt = (self.dt * self.light) / 3600.0
