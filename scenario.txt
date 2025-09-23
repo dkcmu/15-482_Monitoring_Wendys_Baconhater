@@ -1,0 +1,51 @@
+# TEST 1: Checking all temperature sensors
+
+By logging into the TerraBot, we could view live the value of all the sensors.
+
+- This would test if the sensor is malfunctioning if there is dissimilarity between the temperature sensors.
+
+Using logs, check if it is a sudden spike or a gradual increase in temperature. 
+
+- If there was a spike in the temperature (say, current temperature is 2 times higher than temperature from 30 minutes ago), there is more evidence for sensor malfunction.
+
+- Otherwise, there is more evidence towards outside factors that caused temperature increase. 
+
+
+# TEST 2: Check if the actuators or a behavior is what caused the temperature to rise
+
+Use the logs to view which behaviors are active/inactive during the temperature spike.
+
+- Seeing which behaviors are active/inactive leads us to view which actuators are inactive/active as well as the double-checking conditions for behaviors (e.g. behaviors are in the correct state if it’s a finite state model, value thresholds, etc.)
+
+This would indicate if it the sensor or the code that’s messing up
+
+- If there is an actuator command that would cause the rise in temperature (e.g. LED increase) then the problem is with the code rather than the sensor.
+
+- If there isn’t that would indicate a sensor malfunction 
+
+
+# TEST COMPARISON
+
+The second test is better, because it captures more meaningful information behind
+conditions that cause the temperature increase if it occurs. If the issue was due 
+to a behavior, then the first test would not be able to uncover this, while the 
+second test would. It’s also possible that all sensors malfunction which the first 
+test can’t capture.
+
+
+# PROS VS. CONS
+
+Pros
+
+- More meaningful interpretations of why the temperature increase occurred
+
+- Able to know which behavior(s) contributed to the temperature increase
+
+-Able to create diagnosing behavior depending on which behavior(s) failed. 
+
+- Able to capture cases where both temperature sensors.
+
+Cons 
+
+- If the sensor malfunctioned, the first test would be quicker to diagnose, while the second test would take longer to figure out.
+
