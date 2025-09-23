@@ -99,6 +99,7 @@ class LayeredGreenhouseAgent(GreenhouseAgent):
 
         planning = layers.PlanningLayer("greenhouse_schedule.txt", self)
         self.setPlanningLayer(planning)
+        self.getPlanningLayer().getNewSchedule()
         # END STUDENT CODE
 
     def setBehavioralLayer(self, behavioral):
