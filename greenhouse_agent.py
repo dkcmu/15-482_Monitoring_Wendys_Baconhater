@@ -5,6 +5,7 @@ from terrabot_utils import time_since_midnight, set_use_sim_time, spin_for, get_
 from terrabot_utils import clock_time
 import greenhouse_behaviors as gb
 import camera_behavior as cb
+import email_behavior
 
 def check_for_input():
     if sys.stdin in select.select([sys.stdin],[],[],0)[0]:
@@ -91,7 +92,8 @@ class LayeredGreenhouseAgent(GreenhouseAgent):
             gb.LowerTemp(self),
             gb.RaiseSMoist(self),
             gb.RaiseTemp(self),
-            cb.TakeImage(self)
+            cb.TakeImage(self),
+            email_behavior.Email(self)
         ]
         behavioral = layers.BehavioralLayer(self.sensors, self.actuators, self.behaviors, self)
         self.setBehavioralLayer(behavioral)
@@ -101,6 +103,7 @@ class LayeredGreenhouseAgent(GreenhouseAgent):
 
         planning = layers.PlanningLayer("greenhouse_schedule.txt", self)
         self.setPlanningLayer(planning)
+        self.getPlanningLayer().getNewSchedule()
         # END STUDENT CODE
 
     def setBehavioralLayer(self, behavioral):
