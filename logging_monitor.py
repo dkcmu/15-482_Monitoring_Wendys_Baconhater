@@ -13,7 +13,7 @@ class LoggingMonitor(Monitor):
         self.array_sensors = ['light_raw', 'temp_raw', 'humid_raw', 'weight_raw' ,'smoist_raw']
         self.actuators = ['fan', 'wpump', 'led', 'camera']
 
-        self.file_name = "monitoring_hw_log.csv"
+        self.file_name = "log.csv"
         headings = self.normal_sensors + [
             'light_raw_1', 'light_raw_2',
             'temp_raw_1', 'temp_raw_2',
