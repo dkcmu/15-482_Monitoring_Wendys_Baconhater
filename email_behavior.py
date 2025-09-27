@@ -17,8 +17,6 @@ class Email(Greenhouse_Behavior):
         self._sent_email = False
         self.receiver_emails = [
             "chrissu@andrew.cmu.edu",
-            "dkouatch@andrew.cmu.edu",
-            "mliang4@andrew.cmu.edu"
         ]
 
         self.fsm = Machine(self, states=self.states, initial=self.initial,
@@ -61,28 +59,54 @@ class Email(Greenhouse_Behavior):
         return actuator_data
 
     def create_email(self):
-        """Constructs subject, body, and attachments for the email."""
-        # Example metadata
-        team_name = "Team Wendy's Baconhater"
-        terrabot_number = 7
-        timestamp = datetime.datetime.fromtimestamp(self.sensordata['unix_time']).strftime("%Y-%m-%d %H:%M:%S")
+        import os
+        import datetime
 
-        subject = f"{team_name} TerraBot{terrabot_number} Status Update"
-        body = f"""
-        <h2>{team_name} - TerraBot {terrabot_number}</h2>
-        <p><b>Time:</b> {timestamp}</p>
-        <p>{self.parse_sensor_data()}</p>
-        <p>{self.parse_actuator_state()}</p>
-        <p>Most recent image:</p>
-        <p><img src="cid:image1" /></p>
-        """
+        IMAGE_DIRECTORY = "/home/robotanist/User/images"
 
+        TEAM_NAME = "Team Wendy's Baconhater"
+        timestamp = datetime.datetime.fromtimestamp(
+            self.sensordata['unix_time']
+        ).strftime("%d/%m/%Y %H:%M:%S")
+
+        subject = f"{TEAM_NAME} TerraBot 7 Daily Mail"
         images = []
-        for file_name in ["imgs/chris_pic.jpg"]:
-            with open(file_name, 'rb') as f:
-                images.append(f.read())
+
+        if os.path.isdir(IMAGE_DIRECTORY):
+            files = [os.path.join(IMAGE_DIRECTORY, f) for f in os.listdir(IMAGE_DIRECTORY)]
+            files = [f for f in files if os.path.isfile(f)]
+            if files:
+                last_image = max(files, key=os.path.getmtime)
+                with open(last_image, "rb") as f:
+                    images.append(f.read())
+
+                body = f"""
+                <h2>{TEAM_NAME} - TerraBot 7</h2>
+                <p><b>Time:</b> {timestamp}</p>
+                <p>{self.parse_sensor_data()}</p>
+                <p>{self.parse_actuator_state()}</p>
+                <p>Most recent image:</p>
+                <p><img src="cid:image1" /></p>
+                """
+            else:
+                body = f"""
+                <h2>{TEAM_NAME} - TerraBot 7</h2>
+                <p><b>Time:</b> {timestamp}</p>
+                <p>{self.parse_sensor_data()}</p>
+                <p>{self.parse_actuator_state()}</p>
+                <p>No image available.</p>
+                """
+        else:
+            body = f"""
+            <h2>{TEAM_NAME} - TerraBot 7</h2>
+            <p><b>Time:</b> {timestamp}</p>
+            <p>{self.parse_sensor_data()}</p>
+            <p>{self.parse_actuator_state()}</p>
+            <p>Image directory not found.</p>
+            """
 
         return subject, body, images
+
 
     def email(self):
         subject, body, images = self.create_email()
