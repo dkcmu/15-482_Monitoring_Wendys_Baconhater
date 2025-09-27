@@ -16,8 +16,9 @@ class TakeImage(Greenhouse_Behavior):
 	    # Initialize the FSM and add transitions
         # BEGIN STUDENT CODE
         self.retries = 0
-        self.images = 0
+        self.images = 0 
         self.pathroot = "/home/robotanist/User/images/"
+        if not os.path.exists(self.pathroot): os.makedirs(self.pathroot)
         self.last_time = 24*60*60
         self.led = 0
         
