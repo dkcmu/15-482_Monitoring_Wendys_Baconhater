@@ -18,7 +18,10 @@ class Email(Greenhouse_Behavior):
         self.receiver_emails = [
             "chrissu@andrew.cmu.edu",
             "dkouatch@andrew.cmu.edu",
-            "mliang4@andrew.cmu.edu"
+            "mliang4@andrew.cmu.edu",
+            "rsimmons@andrew.cmu.edu",
+            "shashwa3@andrew.cmu.edu",
+            "abhinanv@andrew.cmu.edu"
         ]
 
         self.fsm = Machine(self, states=self.states, initial=self.initial,
