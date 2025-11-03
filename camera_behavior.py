@@ -37,10 +37,10 @@ class TakeImage(Greenhouse_Behavior):
         self.fsm.add_transition('doStep', 'wait_for_file', 'idle', conditions=['time_up', 'file_exists'], before=['finish_image'])
         self.fsm.add_transition('doStep', 'wait_for_file', 'wait_for_file', conditions=['time_up', 'no_file_exists', 'retry_allowed'], after=['setTimer20', 'update_retry'])
         self.fsm.add_transition('doStep', 'wait_for_file', 'idle', conditions=['time_up', 'no_file_exists', 'no_retry_allowed'], before=['warning'])
-        self.fsm.add_transition('disable', 'idle', self.initial)
-        self.fsm.add_transition('disable', 'change_light', self.initial)
-        self.fsm.add_transition('disable', 'get_image', self.initial)
-        self.fsm.add_transition('disable', 'wait_for_file', self.initial)
+        self.fsm.add_transition('disable', 'idle', self.initial, after='setLastTime')
+        self.fsm.add_transition('disable', 'change_light', self.initial, after='setLastTime')
+        self.fsm.add_transition('disable', 'get_image', self.initial, after='setLastTime')
+        self.fsm.add_transition('disable', 'wait_for_file', self.initial, after='setLastTime')
         # END STUDENT CODE
 
     # Add the condition and action functions
@@ -48,7 +48,7 @@ class TakeImage(Greenhouse_Behavior):
     #            modify state information only in the action functions
     # BEGIN STUDENT CODE
     def next_day(self):
-        return self.last_time >= self.mtime
+        return self.last_time > self.mtime
     def light_is_optimal(self):
         return 400 <= self.light < 600
     def can_take_image(self):

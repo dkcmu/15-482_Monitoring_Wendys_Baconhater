@@ -1,5 +1,6 @@
 from monitor import *
 from terrabot_utils import clock_time
+import os
 
 class LoggingMonitor(Monitor):
 
@@ -23,8 +24,9 @@ class LoggingMonitor(Monitor):
         ] + self.actuators
 
         # Open new Log File
-        with open(self.file_name, "w") as file:
-            file.write(",".join(headings) + '\n')
+        if not os.path.exists(f"./{self.file_name}"):
+            with open(self.file_name, "w") as file:
+                file.write(",".join(headings) + '\n')
         # END STUDENT CODE
 
     def perceive(self):

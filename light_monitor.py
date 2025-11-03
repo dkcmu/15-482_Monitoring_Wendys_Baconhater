@@ -76,9 +76,9 @@ class LightMonitor(Monitor):
             # print(f"Future Ambient Insolation: {future_ambient_insolation}")
 
             if future_behavior_time:
-                self.optimal_value = (self.target - self.insolation - future_ambient_insolation) / future_behavior_time
+                self.current_optimal = (self.target - self.insolation - future_ambient_insolation) / future_behavior_time
             else:
-                self.optimal_value = 0
+                self.current_optimal = 0
             
             # print(f"Insolation: ({self.insolation} / {self.target})")
             # print(f"Optimal Value: {self.optimal_value}\n")
