@@ -120,7 +120,7 @@ class Light(Greenhouse_Behavior):
         monitor = self.agent.getExecutiveLayer().getMonitor('LightMonitor')
         
         # Avoid over-insolation
-        new_optimal_level = [(monitor.optimal_value // 1) - 45, (monitor.optimal_value // 1) + 5]
+        new_optimal_level = [(monitor.current_optimal // 1) - 45, (monitor.current_optimal // 1) + 5]
         if self.optimal_level != new_optimal_level:
             self.optimal_level = new_optimal_level
 
@@ -386,7 +386,7 @@ class RaiseSMoist(Greenhouse_Behavior):
         # waiting -> _
         self.fsm.add_transition('doStep', 'waiting', 'watering',
                                 unless=['watered_enough', 'reservoir_empty', 'moist_enough'],
-                                after='startWatering')
+                                after=['setTimer10', 'startWatering'])
         self.fsm.add_transition('doStep', 'waiting', 'done',
                                 conditions='watered_enough', after='startDone')
         self.fsm.add_transition('doStep', 'waiting', 'done',
@@ -396,7 +396,7 @@ class RaiseSMoist(Greenhouse_Behavior):
 
         # watering -> _
         self.fsm.add_transition('doStep', 'watering', 'measuring',
-                                conditions='time_up', after='startMeasuring')
+                                conditions='time_up', after=['setTimer300', 'startMeasuring'])
 
         # measuring -> _
         self.fsm.add_transition('doStep', 'measuring', 'waiting',
@@ -437,12 +437,15 @@ class RaiseSMoist(Greenhouse_Behavior):
         return self.time >= self.waittime
     
     def watered_enough(self):
+        print(f"Watered Enough Check: {self.total_water}/{self.daily_limit}")
         return self.total_water >= self.daily_limit
     
     def reservoir_empty(self):
+        print(f"Reservoir Empty Check: {self.water_level}/30")
         return self.water_level < 30
     
     def moist_enough(self):
+        print(f"Moist Enough Check: {self.smoist_est}/{self.wet}")
         return self.smoist_est >= self.wet
     # END STUDENT CODE
         
@@ -481,12 +484,12 @@ class RaiseSMoist(Greenhouse_Behavior):
         self.total_water = 0
         self.setLastTime()
     def startWatering(self):
+        print("Starting watering")
         self.start_weight = self.weight_est
-        self.setTimer10()
         self.setPump(True)
     def startMeasuring(self):
+        print("Starting measuring")
         self.setPump(False)
-        self.setTimer300()
     # END STUDENT CODE
 
     def setPump(self,state):
